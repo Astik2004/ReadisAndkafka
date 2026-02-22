@@ -1,7 +1,4 @@
-version: '3.8'
-
 services:
-  # 1. Spring Boot App (Jab future mein Docker se chalana ho)
   app:
     build: .
     ports:
@@ -10,16 +7,16 @@ services:
       - REDIS_HOST=redis
       - DB_HOST=mysql
     depends_on:
-      - redis
-      - mysql
+      mysql:
+        condition: service_healthy   # <-- MAGIC: App tab tak wait karega jab tak MySQL healthy na ho jaye
+      redis:
+        condition: service_started
 
-  # 2. Redis Cache Server
   redis:
     image: redis:latest
     ports:
       - "6379:6379"
 
-  # 3. MySQL Database
   mysql:
     image: mysql:8.0
     ports:
@@ -27,3 +24,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: ecomdb
+    healthcheck:                     # <-- MAGIC: Ye check karega ki MySQL asal me connection ke liye ready hai ya nahi
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
