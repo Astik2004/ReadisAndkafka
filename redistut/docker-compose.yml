@@ -8,7 +8,7 @@ services:
       - DB_HOST=mysql
     depends_on:
       mysql:
-        condition: service_healthy   # <-- MAGIC: App tab tak wait karega jab tak MySQL healthy na ho jaye
+        condition: service_healthy
       redis:
         condition: service_started
 
@@ -24,8 +24,14 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: ecomdb
-    healthcheck:                     # <-- MAGIC: Ye check karega ki MySQL asal me connection ke liye ready hai ya nahi
+    volumes:                                   # <-- MAGIC: Ye MySQL ke data ko bahar nikaal lega
+      - mysql_data:/var/lib/mysql              # <-- /var/lib/mysql me MySQL asli data rakhta hai
+    healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+# Sabse neeche locker (volume) ka naam declare karna zaroori hai
+volumes:
+  mysql_data:                                  # <-- Ye hamara permanent safe locker hai
