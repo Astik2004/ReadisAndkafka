@@ -7,19 +7,16 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-@Configuration // This tells Spring "Hey, look in here for setup instructions!"
+@Configuration 
 public class RedisConfig {
 
-    
-    @Bean // This creates the exact "bean" your controller is looking for
+    @Bean 
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
         
-        // This ensures your Redis keys are saved as plain text, not unreadable binary
         template.setKeySerializer(new StringRedisSerializer());
         
-        // This ensures your values are saved as readable JSON
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         
         return template;
