@@ -17,6 +17,14 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private EmailService emailService;
+
+    public void sendAllProductsOnMail() {
+        List<Product> products = productRepository.findAll();
+        emailService.sendProductListEmail(products);
+    }
+
     public Product createProduct(Product product) {
         return productRepository.save(product);
     }
