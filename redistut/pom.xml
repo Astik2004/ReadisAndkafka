@@ -19,94 +19,76 @@
     <name>redistut</name>
     <description>Spring Boot Redis + JPA Demo</description>
 
-    <!-- ================= PROPERTIES ================= -->
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mysql.version>8.0.33</mysql.version>
+
+        <db.url>jdbc:mysql://localhost:3306/ecomdb</db.url>
+        <db.username>root</db.username>
+        <db.password>rootpassword</db.password>
     </properties>
 
-    <!-- ================= DEPENDENCIES ================= -->
     <dependencies>
-
-        <!-- ACTUATOR -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
-        <!-- WEB -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-        <!-- JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
-        <!-- REDIS -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-
-        <!-- MYSQL DRIVER -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.version}</version>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- LOMBOK (JAVA 21 COMPATIBLE) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.34</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Scheduler -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
-        <!-- Mail Sender -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
-
-        <!-- TEST -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- DEVTOOLS -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-
     </dependencies>
 
-    <!-- ================= BUILD ================= -->
     <build>
         <plugins>
-
-            <!-- SPRING BOOT PLUGIN -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-            <!-- JAVA COMPILER CONFIG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -115,8 +97,27 @@
                     <release>21</release>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>4.24.0</version>
+                <configuration>
+                    <changeLogFile>src/main/resources/db/migration/master.xml</changeLogFile>
+                    <driver>com.mysql.cj.jdbc.Driver</driver>
+                    <url>${db.url}</url>
+                    <username>${db.username}</username>
+                    <password>${db.password}</password>
+                    <verbose>true</verbose>
+                    <logging>info</logging>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.mysql</groupId>
+                        <artifactId>mysql-connector-j</artifactId>
+                        <version>${mysql.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
-
 </project>

@@ -21,7 +21,8 @@ public class MailScheduler {
         emailService.sendMail();
         System.out.println("Mail sent at 6 AM");
     }
-    @Scheduled(cron = "0 */1 * * * ?")
+    //@Scheduled(cron = "0 */1 * * * ?")
+   // @Scheduled(fixedDelay = 5000)
     public void sendProductOnMail()
     {
         productService.sendAllProductsOnMail();

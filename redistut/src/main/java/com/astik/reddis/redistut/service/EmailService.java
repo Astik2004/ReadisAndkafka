@@ -6,6 +6,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -36,8 +37,9 @@ public class EmailService {
         }
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("yadavastik2004@gmail.com");
+        message.setTo("prayagyadav2009@gmail.com");
         message.setSubject("All Products List");
+        message.setSentDate(new Date());
         message.setText(body.toString());
 
         mailSender.send(message);
